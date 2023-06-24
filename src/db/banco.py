@@ -32,6 +32,7 @@ class Banco:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     descricao TEXT,
                     valor DECIMAL(5,2),
+                    limite INTEGER
                     created_at INTEGER,
                     updated_at INTEGER
                 )""")
