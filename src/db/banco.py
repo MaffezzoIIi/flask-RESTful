@@ -18,9 +18,9 @@ class Banco:
             self.conexao.commit()
 
             c.execute("""create table if not exists gravadoras (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT,
-                    valor_contrato REAL,
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    nome TEXT NOT NULL,
+                    valor_contrato REAL NOT NULL,
                     vencimento_contrato INTEGER,
                     created_at INTEGER,
                     updated_at INTEGER
@@ -29,10 +29,10 @@ class Banco:
             self.conexao.commit()
 
             c.execute("""create table if not exists planos (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    descricao TEXT,
-                    valor DECIMAL(5,2),
-                    limite INTEGER
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    descricao TEXT NOT NULL,
+                    valor DECIMAL(5,2) NOT NULL,
+                    limite INTEGER NOT NULL
                     created_at INTEGER,
                     updated_at INTEGER
                 )""")
@@ -40,8 +40,8 @@ class Banco:
             self.conexao.commit()
 
             c.execute(""" create table if not exists generos (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    descricao TEXT,
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    descricao TEXT NOT NULL,
                     created_at INTEGER,
                     updated_at INTEGER
                 )""")
@@ -49,57 +49,37 @@ class Banco:
             self.conexao.commit()
 
             c.execute(""" create table if not exists artistas (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT,
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    nome TEXT NOT NULL,
                     created_at INTEGER,
                     updated_at INTEGER,
-                    gravadora_id INTEGER,
+                    gravadora_id INTEGER NOT NULL,
                     FOREIGN KEY(gravadora_id) REFERENCES gravadoras(id)
                 )""")
 
             self.conexao.commit()
 
             c.execute(""" create table if not exists clientes (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    login TEXT,
-                    senha TEXT,
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    login TEXT NOT NULL,
+                    senha TEXT NOT NULL,
                     created_at INTEGER,
                     updated_at INTEGER,
-                    planos_id INTEGER,
+                    planos_id INTEGER NOT NULL,
                     FOREIGN KEY(planos_id) REFERENCES planos(id)
                 )""")
 
             self.conexao.commit()
 
             c.execute(""" create table if not exists musicas (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT,
-                    duracao INTEGER,
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    nome TEXT NOT NULL,
+                    duracao INTEGER NOT NULL,
                     lancamento INTEGER,
                     created_at INTEGER,
                     updated_at INTEGER,
-                    generos_id INTEGER,
+                    generos_id INTEGER NOT NULL,
                     FOREIGN KEY(generos_id) REFERENCES generos(id)
-                )""")
-
-            self.conexao.commit()
-
-            c.execute(""" create table if not exists musicas_has_artistas (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    musicas_id INTEGER,
-                    artistas_id INTEGER,
-                    FOREIGN KEY(musicas_id) REFERENCES musicas(id),
-                    FOREIGN KEY(artistas_id) REFERENCES artistas(id)
-                )""")
-
-            self.conexao.commit()
-
-            c.execute(""" create table if not exists musicas_has_clientes (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    musicas_id INTEGER,
-                    clientes_id INTEGER,
-                    FOREIGN KEY(musicas_id) REFERENCES musicas(id),
-                    FOREIGN KEY(clientes_id) REFERENCES clientes(id)
                 )""")
 
             self.conexao.commit()
