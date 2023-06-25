@@ -41,19 +41,17 @@ class Planos(db.Model):
 with app.app_context():
      db.create_all()
 
-# @app.route('/api/planos', methods=['GET'])
-# def get_planos():
-#     with app.app_context():
-#         planos = Plano.query.all()
-#         return jsonify([plano.serialize() for plano in planos])
+@app.route('/api/planos', methods=['GET'])
+def get_planos():
+    planos = Planos.query.all()
+    return jsonify([plano.serialize() for plano in planos])
 
-# @app.route('/api/planos/<int:plano_id>', methods=['GET'])
-# def get_plano(plano_id):
-#     with app.app_context():
-#         plano = Plano.query.get(plano_id)
-#         if not plano:
-#             return jsonify({'error': 'Plano não encontrado'}), 404
-#         return jsonify(plano.serialize())
+@app.route('/api/planos/<int:plano_id>', methods=['GET'])
+def get_plano(plano_id):
+    plano = Planos.query.get(plano_id)
+    if not plano:
+        return jsonify({'error': 'Plano não encontrado'}), 404
+    return jsonify(plano.serialize())
 
 @app.route('/api/planos', methods=['POST'])
 def create_plano():
@@ -64,6 +62,33 @@ def create_plano():
     db.session.add(novo_plano)
     db.session.commit()
     return jsonify(novo_plano.serialize()), 201
+
+@app.route('/api/planos/<int:plano_id>', methods=['PUT'])
+def update_plano(plano_id):
+    plano = Planos.query.get(plano_id)
+    if not plano:
+        return jsonify({'error': 'Plano não encontrado'}), 404
+    
+    data = request.get_json()
+    plano.descricao = data.get('descricao', plano.descricao)
+    plano.valor = data.get('valor', plano.valor)
+    plano.limite = data.get('limite', plano.limite)
+    current_time = datetime.utcnow()
+    plano.updated_at = timestamp = int(current_time.timestamp())
+
+    db.session.commit()
+    return jsonify({'message': 'Plano atualizado com sucesso', 'plano': plano.serialize()})
+
+
+@app.route('/api/planos/<int:plano_id>', methods=['DELETE'])
+def delete_plano(plano_id):
+    plano = Planos.query.get(plano_id)
+    if not plano:
+        return jsonify({'error': 'Plano não encontrado'}), 404
+    db.session.delete(plano)
+    db.session.commit()
+    return jsonify({'message': 'Plano excluido com sucesso', 'plano': plano.serialize()})
+
 
 if __name__ == '__main__':
     app.run()
