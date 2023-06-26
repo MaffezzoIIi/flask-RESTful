@@ -1,2 +1,4 @@
 flask
 pytest
+pytest-mock
+SQLAlchemy

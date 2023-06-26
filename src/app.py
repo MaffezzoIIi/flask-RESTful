@@ -1,7 +1,19 @@
 from flask import Flask, request, jsonify
 from db.banco import Banco
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
+
+#MODELS
+from models.Artistas import Artistas
+from models.Clientes import Clientes
+from models.Generos import Generos
+from models.Gravadoras import Gravadoras
+from models.Musicas import Musicas
+from models.MusicasArtistas import MusicasArtistas
+from models.MusicasClientes import MusicasClientes
+from models.Pagamentos import Pagamentos
+from models.Planos import Planos
+
 
 def create_app():
     app = Flask(__name__)
@@ -10,119 +22,6 @@ def create_app():
 
 app = create_app()
 db = SQLAlchemy(app)
-
-class Planos(db.Model):
-    id = db.Column(db.Integer,nullable=False, primary_key=True, autoincrement=True)
-    descricao = db.Column(db.Text, nullable=False)
-    valor = db.Column(db.DECIMAL(5, 2),nullable=False)
-    limite = db.Column(db.Integer,nullable=False)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'descricao': self.descricao,
-            'valor': self.valor,
-            'limite': self.limite,
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
-
-class Generos(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    descricao = db.Column(db.Text,n nullable=False)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'descricao': self.descricao,
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
-
-class Gravadoras(db.Model):
-    id = db.Column(db.Integer,nullable=False, primary_key=True, autoincrement=True)
-    nome = db.Column(db.Text, nullable=False)
-    valor_contrato = db.Column(db.DECIMAL(10,0), nullable=False)
-    vencimento_contrato = db.Column(db.Integer)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'nome': self.nome,
-            'valor_contrato': self.valor_contrato,
-            'vencimento_contrato': datetime.fromtimestamp(self.vencimento_contrato).isoformat(),
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
-
-class Clientes(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    login = db.Column(db.Text, nullable=False)
-    senha = db.Column(db.Text, nullable=False)
-    email = db.Column(db.Text)
-    planos_id = db.Column(db.Integer, nullable=False, db.ForeignKey('planos.id'))
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'nome': self.nome,
-            'valor_contrato': self.valor_contrato,
-            'vencimento_contrato': datetime.fromtimestamp(self.vencimento_contrato).isoformat(),
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
-
-class Artista(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    nome = db.Column(db.Text, nullable=False)
-    gravadoras_id = db.Column(db.INTEGER, db.ForeignKey('gravadoras.id'), nullable=False)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    musicas = db.relationship('Musica', secondary='musicas_has_artistas', backref='artistas')
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'nome': self.nome,
-            'gravadoras': self.gravadoras.nome,
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
-    
-
-class Musica(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    nome = db.Column(db.Text, nullable=False)
-    duracao = db.Column(db.Time, nullable=False)
-    generos_id = db.Column(db.Integer, db.ForeignKey('generos.id'), nullable=False)
-    lancamento = db.Column(db.Integer)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    artistas = db.relationship('Artista', secondary='musicas_has_artistas', backref='musicas')
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'titulo': self.titulo,
-            'genero': self.genero.nome,
-            'artista': self.artista.nomes
-        }
-
-class MusicasArtistas(db.Model):
-    __tablename__ = 'musicas_has_artistas'
-    musica_id = db.Column(db.Integer, db.ForeignKey('musica.id'), primary_key=True)
-    artista_id = db.Column(db.Integer, db.ForeignKey('artista.id'), primary_key=True)
-    musica = db.relationship('Musica', backref=db.backref('musicas_has_artistas', cascade='all, delete-orphan'))
-    artista = db.relationship('Artista', backref=db.backref('musicas_has_artistas', cascade='all, delete-orphan'))
-
 
 with app.app_context():
      db.create_all()
@@ -279,7 +178,7 @@ def create_cliente():
     data = request.get_json()
     current_time = datetime.utcnow()
     timestamp = int(current_time.timestamp())
-    novo_cliente = Clientes(login=data['login'], senha=data['senha'], email=data['email'], planos_id=daata['email'], created_at=timestamp, updated_at=timestamp)
+    novo_cliente = Clientes(login=data['login'], senha=data['senha'], email=data['email'], planos_id=data['email'], created_at=timestamp, updated_at=timestamp)
     db.session.add(novo_cliente)
     db.session.commit()
     return jsonify(novo_cliente.serialize()), 201
@@ -307,8 +206,7 @@ def update_cliente(cliente_id):
     cliente.senha = data.get('senha', cliente.senha)
     cliente.planos_id = data.get('planos_id', cliente.planos_id)
     current_time = datetime.utcnow()
-    gravadora.updated_at = timestamp = int(current_time.timestamp())
-
+    cliente.updated_at = timestamp = int(current_time.timestamp())
     db.session.commit()
     return jsonify({'message': 'Cliente atualizado com sucesso', 'Cliente': cliente.serialize()})
 
