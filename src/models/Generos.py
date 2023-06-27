@@ -2,7 +2,6 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-db.init_app(app)
 
 class Generos(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)

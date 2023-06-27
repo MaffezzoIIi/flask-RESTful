@@ -1,6 +1,6 @@
 import pytest
 
-from src.models.Planos import Planos
+from ...src.models.Planos import Planos
 from datetime import datetime
 
 def test_get_planos(mocker):

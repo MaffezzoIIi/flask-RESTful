@@ -1,9 +1,3 @@
-from flask import Flask, request, jsonify
-from db.banco import Banco
-from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy 
-
-#MODELS
 from models.Artistas import Artistas
 from models.Clientes import Clientes
 from models.Generos import Generos
@@ -13,7 +7,10 @@ from models.MusicasArtistas import MusicasArtistas
 from models.MusicasClientes import MusicasClientes
 from models.Pagamentos import Pagamentos
 from models.Planos import Planos
-
+from flask import Flask, request, jsonify
+from db.banco import Banco
+from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy 
 
 def create_app():
     app = Flask(__name__)
@@ -345,4 +342,4 @@ def get_musicas_artistas():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

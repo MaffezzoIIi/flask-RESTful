@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class Banco:
 
     def __init__(self):
