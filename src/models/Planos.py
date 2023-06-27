@@ -1,40 +1,45 @@
-from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
-class Planos(db.Model):
-    id = db.Column(db.Integer,nullable=False, primary_key=True, autoincrement=True)
-    descricao = db.Column(db.Text, nullable=False)
-    valor = db.Column(db.DECIMAL(5, 2),nullable=False)
-    limite = db.Column(db.Integer,nullable=False)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
+class Planos():
     
-    def serialize(self):
-        return {
-            'id': self.id,
-            'descricao': self.descricao,
-            'valor': self.valor,
-            'limite': self.limite,
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
+    def __init__(self, id_plano, nome_plano, valor_plano, descricao_plano):
+        self.id_plano = id_plano
+        self.nome_plano = nome_plano
+        self.valor_plano = valor_plano
+        self.descricao_plano = descricao_plano
+        self.created_at = None
+        self.updated_at = None
 
-    def get_planos(self, plano_id):
-        return self.query.get(plano_id)
+    def getId_plano(self):
+        return self.id_plano
 
-    def update_plano(self, plano_id, descricao=None, valor=None, limite=None):
-        plano = self.get_plano(plano_id)
-        if not plano:
-            raise ValueError("Plano não encontrado")
+    def setId_plano(self, id_plano):
+        self.id_plano = id_plano
+
+    def getNome_plano(self):
+        return self.nome_plano
+
+    def setNome_plano(self, nome_plano):
+        self.nome_plano = nome_plano
+
+    def getValor_plano(self):
+        return self.valor_plano
+
+    def setValor_plano(self, valor_plano):
+        self.valor_plano = valor_plano
+
+    def getDescricao_plano(self):
+        return self.descricao_plano
+
+    def setDescricao_plano(self, descricao_plano):
+        self.descricao_plano = descricao_plano
         
-        if descricao is not None:
-            plano.descricao = descricao
-        if valor is not None:
-            plano.valor = valor
-        if limite is not None:
-            plano.limite = limite
+    def getCreated_at(self):
+        return self.created_at
         
-        plano.updated_at = int(datetime.now().timestamp())
-        self.commit()
+    def setCreated_at(self, created_at):
+        self.created_at = created_at
+        
+    def getUpdated_at(self):
+        return self.updated_at
+        
+    def setUpdated_at(self, updated_at):
+        self.updated_at = updated_at
