@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
 
+from src.models.Planos import Planos
 
 def create_app():
     app = Flask(__name__)
@@ -23,7 +24,18 @@ def get_plano(plano_id):
 
 @app.route('/api/planos', methods=['POST'])
 def create_plano():
-    return 'api/planos'
+    data = request.get_json()
+    print(data)
+
+    if data is not None:
+        plano = Planos(data['id_plano'], data['nome_plano'], data['valor_plano'], data['descricao_plano'])
+        plano.setCreated_at(datetime.now())
+        plano.setUpdated_at(datetime.now())
+
+        return jsonify(plano.__dict__), 200
+        
+    return jsonify({'message': 'No data provided'}), 400
+
 
 @app.route('/api/planos/<int:plano_id>', methods=['PUT'])
 def update_plano(plano_id):
