@@ -1,14 +1,20 @@
-from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+class Pagamentos():
 
-db = SQLAlchemy()
+    def __init__(self, id, date):
+        self.id = id
+        self.date = date
 
-class Pagamentos(db.Model):
-    id = db.Column(db.Integer,nullable=False, primary_key=True, autoincrement=True)
-    date = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'date': datetime.fromtimestamp(self.date).isoformat()
-        }
+    def getId(self):
+        return self.id
+
+    def setId(self, id):
+        self.id = id
+
+    def getDate(self):
+        return self.date
+
+    def setDate(self, date):
+        self.date = date
+
+    def save():
+        return 'pagamentos'
