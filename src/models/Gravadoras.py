@@ -1,22 +1,45 @@
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+class Gravadorasa:
 
-db = SQLAlchemy()
+    def __init__(self, id, nome, valor_contrato, vencimento_contrato, created_at, updated_at):
+        self.id = id
+        self.nome = nome
+        self.valor_contrato
+        self.vencimento_contrato
+        self.created_at = created_at
+        self.updated_at = updated_at
 
-class Gravadoras(db.Model):
-    id = db.Column(db.Integer,nullable=False, primary_key=True, autoincrement=True)
-    nome = db.Column(db.Text, nullable=False)
-    valor_contrato = db.Column(db.DECIMAL(10,0), nullable=False)
-    vencimento_contrato = db.Column(db.Integer)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'nome': self.nome,
-            'valor_contrato': self.valor_contrato,
-            'vencimento_contrato': datetime.fromtimestamp(self.vencimento_contrato).isoformat(),
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
+    def getId(self):
+        return self.id
+
+    def setId(self, id):
+        self.id = id
+
+    def getNome(self):
+        return self.nome
+
+    def setNome(self, nome):
+        self.nome = nome
+
+    def getValor_contrato(self):
+        return self.valor_contrato
+
+    def setValor_contrato(self, valor_contrato):
+        self.valor_contrato = valor_contrato
+
+    def getVencimento_contrato(self):
+        return self.vencimento_contrato
+
+    def setVencimento_contrato(self, vencimento_contrato):
+        self.vencimento_contrato = vencimento_contrato
+
+    def getCreated_at(self):
+        return self.created_at
+
+    def setCreated_at(self, created_at):
+        self.created_at = created_at
+
+    def getUpdated_at(self):
+        return self.updated_at
+
+    def setUpdated_at(self, updated_at):
+        self.updated_at = updated_at
