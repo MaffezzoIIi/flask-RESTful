@@ -1,21 +1,38 @@
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+class Artistas():
 
-db = SQLAlchemy()
+    def __init__(self, id, nome, gravadoras_id, created_at, updated_at):
+        self.id = id
+        self.nome = nome
+        self.gravadoras_id = gravadoras_id
+        self.created_at = created_at
+        self.updated_at = updated_at
 
-class Artistas(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    nome = db.Column(db.Text, nullable=False)
-    gravadoras_id = db.Column(db.INTEGER, db.ForeignKey('gravadoras.id'), nullable=False)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    musicas = db.relationship('Musica', secondary='musicas_has_artistas', backref='artistas')
+    def getId(self):
+        return self.id
 
-    def serialize(self):
-        return {
-            'id': self.id,
-            'nome': self.nome,
-            'gravadoras': self.gravadoras.nome,
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
+    def setId(self, id):
+        self.id = id
+
+    def getNome(self):
+        return self.nome
+
+    def setNome(self, nome):
+        self.nome = nome
+
+    def getGravadoras_id(self):
+        return self.gravadoras_id
+
+    def setGravadoras_id(self, gravadoras_id):
+        self.gravadoras_id = gravadoras_id
+
+    def getCreated_at(self):
+        return self.created_at
+
+    def setCreated_at(self, created_at):
+        self.created_at = created_at
+
+    def getUpdated_at(self):
+        return self.updated_at
+
+    def setUpdated_at(self, updated_at):
+        self.updated_at = updated_at
