@@ -1,19 +1,31 @@
-from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+class Generos():
 
-db = SQLAlchemy()
-db.init_app(app)
+    def __init__(self, id, descricao, created_at, updated_at):
+        self.id = id
+        self.descricao = descricao
+        self.created_at = created_at
+        self.updated_at = updated_at
 
-class Generos(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-    descricao = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.Integer)
-    updated_at = db.Column(db.Integer)
-    
-    def serialize(self):
-        return {
-            'id': self.id,
-            'descricao': self.descricao,
-            'created_at': datetime.fromtimestamp(self.created_at).isoformat(),
-            'updated_at': datetime.fromtimestamp(self.updated_at).isoformat()
-        }
+    def getId(self):
+        return self.id
+
+    def setId(self, id):
+        self.id = id
+
+    def getDescricao(self):
+        return self.descricao
+
+    def setDescricao(self, descricao):
+        self.descricao = descricao
+
+    def getCreated_at(self):
+        return self.created_at
+
+    def setCreated_at(self, created_at):
+        self.created_at = created_at
+
+    def getUpdated_at(self):
+        return self.updated_at
+
+    def setUpdated_at(self, updated_at):
+        self.updated_at = updated_at
