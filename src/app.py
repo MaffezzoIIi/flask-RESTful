@@ -34,11 +34,17 @@ def create_plano():
     data = request.get_json()
     print(data)
 
+    if(len(data['descricao']) > 45):
+        return jsonify({'message': 'Descricao muito grande'}), 400
+
     if data is not None:
         plano = Planos(data['id_plano'], data['nome_plano'],
                        data['valor_plano'], data['descricao_plano'])
         plano.setCreated_at(datetime.now())
         plano.setUpdated_at(datetime.now())
+
+
+        plano.save()
 
         return jsonify(plano.__dict__), 200
 

@@ -1,36 +1,41 @@
+import datetime
+from src.db.banco import Banco
+
+mydb = Banco()
+
 class Planos():
     
-    def __init__(self, id_plano, nome_plano, valor_plano, descricao_plano):
-        self.id_plano = id_plano
-        self.nome_plano = nome_plano
-        self.valor_plano = valor_plano
-        self.descricao_plano = descricao_plano
+    def __init__(self, id, valor, descricao, limite):
+        self.id = id
+        self.valor = valor
+        self.descricao = descricao
+        self.limite = limite
         self.created_at = None
         self.updated_at = None
 
-    def getId_plano(self):
-        return self.id_plano
+    def getId(self):
+        return self.id
 
-    def setId_plano(self, id_plano):
-        self.id_plano = id_plano
+    def setId(self, id):
+        self.id = id
 
-    def getNome_plano(self):
-        return self.nome_plano
+    def getValor(self):
+        return self.valor
 
-    def setNome_plano(self, nome_plano):
-        self.nome_plano = nome_plano
+    def setValor(self, valor):
+        self.valor = valor
 
-    def getValor_plano(self):
-        return self.valor_plano
+    def getDescricao(self):
+        return self.descricao
 
-    def setValor_plano(self, valor_plano):
-        self.valor_plano = valor_plano
+    def setDescricao(self, descricao):
+        self.descricao = descricao
 
-    def getDescricao_plano(self):
-        return self.descricao_plano
-
-    def setDescricao_plano(self, descricao_plano):
-        self.descricao_plano = descricao_plano
+    def getLimite(self):
+        return self.limite
+    
+    def setLimite(self, limite):
+        self.limite = limite
         
     def getCreated_at(self):
         return self.created_at
@@ -43,3 +48,18 @@ class Planos():
         
     def setUpdated_at(self, updated_at):
         self.updated_at = updated_at
+
+    def save(plano):
+        cursor = mydb.getCursor()
+
+
+        sql = "INSERT INTO customers (descricao, valor, limte, created_at, updated_at) VALUES (%s, %s, %s, %s, %s)"
+        val = (plano.getDescricao(), plano.getValor(), plano.getLimite(), plano.created_at, plano.created_at)
+
+        plano.setId(cursor.lastrowid)
+
+        cursor.execute(sql, val)
+        mydb.commit()
+
+        return plano
+        

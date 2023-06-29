@@ -92,16 +92,9 @@
 
 import mysql.connector
 
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="yourusername",
-  password="yourpassword"
-)
-
 class Banco():
-
     def __init__(self):
-        mydb = mysql.connector.connect(
+        self.mydb = mysql.connector.connect(
             host="localhost",
             user="yourusername",
             password="yourpassword"
@@ -109,4 +102,10 @@ class Banco():
 
     def getConexao(self):
         return self.mydb
+    
+    def getCursor(self):
+        return self.mydb.cursor()
+    
+    def commit(self):
+        self.mydb.commit()
 
