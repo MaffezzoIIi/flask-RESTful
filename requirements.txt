@@ -2,3 +2,4 @@ flask
 pytest
 pytest-mock
 pytest-cov
+mysql-connector-python
