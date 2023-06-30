@@ -62,4 +62,25 @@ class Planos():
         mydb.commit()
 
         return plano
+    
+    def getAll():
+        cursor = mydb.getCursor()
+
+        cursor.execute("SELECT * FROM planos")
+        myresult = cursor.fetchall()
+
+        for x in myresult:
+            print(x)
+
+        return myresult
+
+    def getOne(id):
+        cursor = mydb.getCursor()
+
+        cursor.execute("SELECT * FROM planos WHERE id = %s", (id,))
+
+        myresult = cursor.fetchone()
+
+        return myresult
+    
         
