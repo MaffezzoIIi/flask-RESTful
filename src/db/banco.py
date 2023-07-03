@@ -94,11 +94,11 @@ import mysql.connector
 
 class Banco():
     def __init__(self):
-        # self.mydb = mysql.connector.connect(
-        #     host="localhost",
-        #     user="yourusername",
-        #     password="yourpassword"
-        # )
+        self.mydb = mysql.connector.connect(
+            host="localhost",
+            user="administrator",
+            password="senha"
+        )
         self.mydb = {}
 
     def getConexao(self):
