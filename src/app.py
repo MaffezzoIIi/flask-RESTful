@@ -6,6 +6,7 @@ from src.models.Generos import Generos
 from src.models.Gravadoras import Gravadoras
 from src.models.Clientes import Clientes
 from src.models.Musicas import Musicas
+from src.models.Artistas import Artistas
 
 def create_app():
     app = Flask(__name__)
@@ -134,8 +135,6 @@ def delete_genero(genero_id):
     return jsonify({'message': 'Nenhum genero encontrado com este id'}), 400
 
 # CRUD GRAVADORAS
-
-
 @app.route('/api/gravadoras', methods=['POST'])
 def create_gravadora():
     data = request.get_json()
@@ -251,8 +250,6 @@ def delete_cliente(cliente_id):
     return jsonify({'message': 'Nenhum cliente encontrado com este id'}), 400
 
 # CRUD MUSICAS
-
-
 @app.route('/api/musicas', methods=['GET'])
 def get_musicas():
     return 'cliente'
@@ -305,10 +302,9 @@ def delete_musica(musica_id):
     return jsonify({'message': 'Nenhuma musica encontrada com este id'}), 400
 
 # CRUD artistas
-
-
 @app.route('/api/artistas', methods=['GET'])
 def get_artistas():
+
     return 'cliente'
 
 
@@ -319,22 +315,40 @@ def get_artista(artista_id):
 
 @app.route('/api/artistas', methods=['POST'])
 def create_artista():
-    return 'cliente'
+    data = request.get_json()
+
+    if data is not None:
+        artista = Artistas(data['nome'], data['gravadoras_id'])
+        artista.setCreated_at(datetime.now())
+        artista.setUpdated_at(datetime.now())
+
+        artista.save()
+
+        return jsonify(artista.__dict__), 200
+
+    return jsonify({'message': 'No data provided'}), 400
 
 
 @app.route('/api/artistas/<int:artista_id>', methods=['PUT'])
 def update_artista(artista_id):
-    return 'cliente'
+    artista = Artistas.getOne(artista_id)
+
+    if artista is not None:
+        data = request.get_json()
+
+        artista.update(data)
+
+        return jsonify(artista.__dict__), 200
+    
+    return jsonify({'message': 'Nenhum artista encontrado com este id'}), 400
 
 
 @app.route('/api/artistas/<int:artista_id>', methods=['DELETE'])
 def delete_artista(artista_id):
-    return 'cliente'
-
-
-@app.route('/api/musicas_has_artistas', methods=['GET'])
-def get_musicas_artistas():
-    return 'cliente'
+    if(Artistas.remove(artista_id)):
+        return jsonify({'message': 'Artista removido com sucesso'}), 200
+    
+    return jsonify({'message': 'Nenhum artista encontrado com este id'}), 400
 
 
 if __name__ == '__main__':
