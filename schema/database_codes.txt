@@ -1,0 +1,229 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`gravadoras`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`gravadoras` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `valor_contrato` DECIMAL(10,0) NOT NULL,
+  `vencimento_contrato` DATE NULL DEFAULT NULL,
+  `created` TIMESTAMP NULL DEFAULT NULL,
+  `modified` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`artistas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`artistas` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `gravadoras_id` INT(11) NOT NULL,
+  `created` TIMESTAMP NULL DEFAULT NULL,
+  `modified` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `nome_UNIQUE` (`nome` ASC) VISIBLE,
+  INDEX `fk_artistas_gravadoras1_idx` (`gravadoras_id` ASC) VISIBLE,
+  CONSTRAINT `fk_artistas_gravadoras1`
+    FOREIGN KEY (`gravadoras_id`)
+    REFERENCES `mydb`.`gravadoras` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 20
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`planos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`planos` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(45) NOT NULL,
+  `valor` DECIMAL(5,2) NOT NULL,
+  `limite` INT(11) NOT NULL,
+  `created` TIMESTAMP NULL DEFAULT NULL,
+  `modified` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `descricao_UNIQUE` (`descricao` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`clientes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`clientes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `login` VARCHAR(45) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  `created` TIMESTAMP NULL DEFAULT NULL,
+  `modified` TIMESTAMP NULL DEFAULT NULL,
+  `planos_id` INT(11) NOT NULL,
+  `email` VARCHAR(50) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `login_UNIQUE` (`login` ASC) VISIBLE,
+  INDEX `fk_usuarios_planos1_idx` (`planos_id` ASC) VISIBLE,
+  CONSTRAINT `fk_usuarios_planos1`
+    FOREIGN KEY (`planos_id`)
+    REFERENCES `mydb`.`planos` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`generos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`generos` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `descricao` VARCHAR(45) NOT NULL,
+  `created` TIMESTAMP NULL DEFAULT NULL,
+  `modified` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `descricao_UNIQUE` (`descricao` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`musicas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`musicas` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `duracao` TIME NOT NULL,
+  `generos_id` INT(11) NOT NULL,
+  `lancamento` DATE NULL DEFAULT NULL,
+  `created` TIMESTAMP NULL DEFAULT NULL,
+  `modified` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_musicas_generos1_idx` (`generos_id` ASC) VISIBLE,
+  CONSTRAINT `fk_musicas_generos1`
+    FOREIGN KEY (`generos_id`)
+    REFERENCES `mydb`.`generos` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 19
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`musicas_has_artistas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`musicas_has_artistas` (
+  `id` INT(11) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+  `musicas_id` INT(11) NOT NULL,
+  `artistas_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_musicas_has_artistas_artistas1_idx` (`artistas_id` ASC) VISIBLE,
+  INDEX `fk_musicas_has_artistas_musicas1_idx` (`musicas_id` ASC) VISIBLE,
+  INDEX `id` (`id` ASC) VISIBLE,
+  CONSTRAINT `fk_musicas_has_artistas_artistas1`
+    FOREIGN KEY (`artistas_id`)
+    REFERENCES `mydb`.`artistas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_musicas_has_artistas_musicas1`
+    FOREIGN KEY (`musicas_id`)
+    REFERENCES `mydb`.`musicas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 31
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`musicas_has_clientes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`musicas_has_clientes` (
+  `id` INT(11) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+  `musicas_id` INT(11) NOT NULL,
+  `clientes_id` INT(11) NOT NULL,
+  `data` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `fk_musicas_has_usuarios_musicas1_idx` (`musicas_id` ASC) VISIBLE,
+  INDEX `fk_musicas_has_usuarios_clientes1_idx` (`clientes_id` ASC) VISIBLE,
+  CONSTRAINT `fk_musicas_has_usuarios_clientes1`
+    FOREIGN KEY (`clientes_id`)
+    REFERENCES `mydb`.`clientes` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_musicas_has_usuarios_musicas1`
+    FOREIGN KEY (`musicas_id`)
+    REFERENCES `mydb`.`musicas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`pagamentos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`pagamentos` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `data` DATE NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 1
+DEFAULT CHARACTER SET = utf8;
+
+
+DELIMITER $$
+CREATE TRIGGER delete_musicas_on_genero_delete
+BEFORE DELETE ON generos
+FOR EACH ROW
+BEGIN
+  -- Excluir as músicas associadas ao gênero que está sendo excluído
+  DELETE FROM musicas WHERE generos_id = OLD.id;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER set_null_on_gravadoras_delete
+BEFORE DELETE ON gravadoras
+FOR EACH ROW
+BEGIN
+  -- Definir gravadoras_id como NULL para os artistas associados à gravadora sendo excluída
+  UPDATE artistas SET gravadoras_id = NULL WHERE gravadoras_id = OLD.id;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER set_null_on_planos_delete
+BEFORE DELETE ON planos
+FOR EACH ROW
+BEGIN
+  -- Definir planos_id como NULL para os clientes associados ao plano sendo excluído
+  UPDATE clientes SET planos_id = NULL WHERE planos_id = OLD.id;
+END $$
+DELIMITER ;
+
+CREATE USER 'administrator'@'localhost' IDENTIFIED BY 'senha';
+GRANT ALL PRIVILEGES ON *.* TO 'administrator'@'localhost';
+
