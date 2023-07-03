@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from datetime import datetime
 
 from src.models.Planos import Planos
+from src.models.Generos import Generos
 
 
 def create_app():
@@ -23,7 +24,8 @@ def get_planos():
 
 @app.route('/api/planos/<int:plano_id>', methods=['GET'])
 def get_plano(plano_id):
-    return 'api/planos'
+    plano = Planos.getOne(plano_id)
+    return jsonify(plano.__dict__), 200
 
 
 @app.route('/api/planos', methods=['POST'])
@@ -36,7 +38,7 @@ def create_plano():
 
     if data is not None:
         plano = Planos(data['nome_plano'],
-                       data['valor_plano'], data['descricao_plano'])
+                       data['valor_plano'], data['descricao'])
         plano.setCreated_at(datetime.now())
         plano.setUpdated_at(datetime.now())
 
@@ -72,31 +74,62 @@ def delete_plano(plano_id):
     return jsonify({'message': 'Nenhum plano encontrato com este id'}), 400
 
 # CRUD GENEROS
-
-
 @app.route('/api/generos', methods=['POST'])
 def create_genero():
-    return 'api/generos'
+    data = request.get_json()
+
+    if data is not None:
+        genero = Generos(data['descricao'])
+        genero.setCreated_at(datetime.now())
+        genero.setUpdated_at(datetime.now())
+
+        genero.save()
+
+        return jsonify(genero.__dict__), 200
+    
+    return jsonify({'message': 'No data provided'}), 400
 
 
 @app.route('/api/generos/<int:genero_id>', methods=['GET'])
 def get_genero(genero_id):
-    return 'api/generos'
+    genero = Generos.getOne(genero_id)
+
+    if genero is not None:
+        return jsonify(genero.__dict__), 200
+    
+    return jsonify({'message': 'Nenhum genero encontrado com este id'}), 400
 
 
 @app.route('/api/generos', methods=['GET'])
 def get_generos():
-    return 'api/generos'
+    generos = Generos.getAll()
+
+    if generos is not None:
+        return jsonify(generos), 200
+    
+    return  jsonify({'message': 'Nenhum genero encontrado'}), 400
 
 
 @app.route('/api/generos/<int:genero_id>', methods=['PUT'])
 def update_genero(genero_id):
-    return 'api/generos'
+    genero = Generos.getOne(genero_id)
+
+    if genero is not None:
+        data = request.get_json()
+
+        genero.update(data)
+
+        return jsonify(genero.__dict__), 200
+    
+    return jsonify({'message': 'Nenhum genero encontrado com este id'}), 400
 
 
 @app.route('/api/generos/<int:genero_id>', methods=['DELETE'])
 def delete_genero(genero_id):
-    return 'api/generos'
+    if(Generos.remove(genero_id)):
+        return jsonify({'message': 'Genero removido com sucesso'}), 200
+    
+    return jsonify({'message': 'Nenhum genero encontrado com este id'}), 400
 
 # CRUD GRAVADORAS
 

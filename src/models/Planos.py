@@ -1,4 +1,3 @@
-import datetime
 from src.db.banco import Banco
 
 mydb = Banco()
