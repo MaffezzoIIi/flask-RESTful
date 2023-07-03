@@ -3,7 +3,7 @@ from datetime import datetime
 
 from src.models.Planos import Planos
 from src.models.Generos import Generos
-
+from src.models.Gravadoras import Gravadoras
 
 def create_app():
     app = Flask(__name__)
@@ -136,31 +136,62 @@ def delete_genero(genero_id):
 
 @app.route('/api/gravadoras', methods=['POST'])
 def create_gravadora():
-    return 'gravadoras'
+    data = request.get_json()
+
+    if data is not None:
+        gravadora = Gravadoras(data['nome'], data['valor_contrato'], data['vencimento_contrato'])
+        gravadora.setCreated_at(datetime.now())
+        gravadora.setUpdated_at(datetime.now())
+
+        gravadora.save()
+
+        return jsonify(gravadora.__dict__), 200
+
+    return jsonify({'message': 'No data provided'}), 400
 
 
 @app.route('/api/gravadoras/<int:gravadora_id>', methods=['GET'])
 def get_gravadora(gravadora_id):
-    return 'gravadoras'
+    gravadora = Gravadoras.getOne(gravadora_id)
+
+    if gravadora is not None:
+        return jsonify(gravadora.__dict__), 200
+    
+    return jsonify({'message': 'Nenhuma gravadora encontrada com este id'}), 400
 
 
 @app.route('/api/gravadoras', methods=['GET'])
 def get_gravadoras():
-    return 'gravadoras'
+    gravadoras = Gravadoras.getAll()
+
+    if gravadoras is not None:
+        return jsonify(gravadoras), 200
+    
+    return jsonify({'message': 'Nenhuma gravadora encontrada'}), 400
 
 
 @app.route('/api/gravadoras/<int:gravadora_id>', methods=['PUT'])
 def update_gravadora(gravadora_id):
-    return 'gravadoras'
+    gravadora = Gravadoras.getOne(gravadora_id)
+
+    if gravadora is not None:
+        data = request.get_json()
+
+        gravadora.update(data)
+
+        return jsonify(gravadora.__dict__), 200
+    
+    return jsonify({'message': 'Nenhuma gravadora encontrada com este id'}), 400
 
 
 @app.route('/api/gravadoras/<int:gravadora_id>', methods=['DELETE'])
 def delete_gravadora(gravadora_id):
-    return 'gravadoras'
+    if(Gravadoras.remove(gravadora_id)):
+        return jsonify({'message': 'Gravadora removida com sucesso'}), 200
+    
+    return jsonify({'message': 'Nenhuma gravadora encontrada com este id'}), 400
 
 # CRUD clientes
-
-
 @app.route('/api/clientes', methods=['POST'])
 def create_cliente():
     return 'cliente'
