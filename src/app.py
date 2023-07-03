@@ -4,6 +4,8 @@ from datetime import datetime
 from src.models.Planos import Planos
 from src.models.Generos import Generos
 from src.models.Gravadoras import Gravadoras
+from src.models.Clientes import Clientes
+from src.models.Musicas import Musicas
 
 def create_app():
     app = Flask(__name__)
@@ -194,27 +196,59 @@ def delete_gravadora(gravadora_id):
 # CRUD clientes
 @app.route('/api/clientes', methods=['POST'])
 def create_cliente():
-    return 'cliente'
+    data = request.get_json()
+
+    if data is not None:
+        cliente = Clientes(data['login'], data['senha'], data['email'], data['planos_id'])
+        cliente.setCreated_at(datetime.now())
+        cliente.setUpdated_at(datetime.now())
+
+        cliente.save()
+
+        return jsonify(cliente.__dict__), 200
+    
+    return jsonify({'message': 'No data provided'}), 400
 
 
 @app.route('/api/clientes/<int:cliente_id>', methods=['GET'])
 def get_cliente(cliente_id):
-    return 'cliente'
+    cliente = Clientes.getOne(cliente_id)
+
+    if cliente is not None:
+        return jsonify(cliente.__dict__), 200
+    
+    return jsonify({'message': 'Nenhum cliente encontrado com este id'}), 400
 
 
 @app.route('/api/clientes', methods=['GET'])
 def get_clientes():
-    return 'cliente'
+    clientes = Clientes.getAll()
+
+    if clientes is not None:
+        return jsonify(clientes), 200
+    
+    return jsonify({'message': 'Nenhum cliente encontrado'}), 400
 
 
 @app.route('/api/clientes/<int:cliente_id>', methods=['PUT'])
 def update_cliente(cliente_id):
-    return 'cliente'
+    cliente = Clientes.getOne(cliente_id)
+
+    if cliente is not None:
+        data = request.get_json()
+
+        cliente.update(data)
+
+        return jsonify(cliente.__dict__), 200
+    return jsonify({'message': 'Nenhum cliente encontrado com este id'}), 400
 
 
 @app.route('/api/clientes/<int:cliente_id>', methods=['DELETE'])
 def delete_cliente(cliente_id):
-    return 'cliente'
+    if(Clientes.remove(cliente_id)):
+        return jsonify({'message': 'Cliente removido com sucesso'}), 200
+    
+    return jsonify({'message': 'Nenhum cliente encontrado com este id'}), 400
 
 # CRUD MUSICAS
 
@@ -226,22 +260,49 @@ def get_musicas():
 
 @app.route('/api/musicas/<int:musica_id>', methods=['GET'])
 def get_musica(musica_id):
-    return 'cliente'
+    musica = Musicas.getOne(musica_id)
+
+    if musica is not None:
+        return jsonify(musica.__dict__), 200
+    
+    return jsonify({'message': 'Nenhuma musica encontrada com este id'}), 400
 
 
 @app.route('/api/musicas', methods=['POST'])
 def create_musica():
-    return 'cliente'
+    data = request.get_json()
+
+    if data is not None:
+        musica = Musicas(data['nome'], data['duracao'], data['generos_id'], data['lancamento'])
+        musica.setCreated_at(datetime.now())
+        musica.setUpdated_at(datetime.now())
+
+        musica.save()
+
+        return jsonify(musica.__dict__), 200
+    return jsonify({'message': 'No data provided'}), 400
 
 
 @app.route('/api/musicas/<int:musica_id>', methods=['PUT'])
 def update_musica(musica_id):
-    return 'cliente'
+    musica = Musicas.getOne(musica_id)
+
+    if musica is not None:
+        data = request.get_json()
+
+        musica.update(data)
+
+        return jsonify(musica.__dict__), 200
+    
+    return jsonify({'message': 'Nenhuma musica encontrada com este id'}), 400
 
 
 @app.route('/api/musicas/<int:musica_id>', methods=['DELETE'])
 def delete_musica(musica_id):
-    return 'cliente'
+    if(Musicas.remove(musica_id)):
+        return jsonify({'message': 'Musica removida com sucesso'}), 200
+    
+    return jsonify({'message': 'Nenhuma musica encontrada com este id'}), 400
 
 # CRUD artistas
 

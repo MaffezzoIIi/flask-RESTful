@@ -1,3 +1,8 @@
+import datetime
+from src.db.banco import Banco
+
+mydb = Banco()
+
 class Musicas():
 
     def __init__(self, id, nome, duracao, generos_id, lancamento, created_at, updated_at):
@@ -50,3 +55,61 @@ class Musicas():
 
     def setUpdated_at(self, updated_at):
         self.updated_at = updated_at
+
+
+    def save(musica):
+        cursor = mydb.getCursor()
+
+        sql = "INSERT INTO musicas (nome, duracao, generos_id, lancamento, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (musica.getNome(), musica.getDuracao(), musica.getGeneros_id(), musica.getLancamento(), musica.created_at, musica.created_at)
+
+        musica.setId(cursor.lastrowid)
+
+        cursor.execute(sql, val)
+        mydb.commit()
+
+        return musica
+    
+    def getOne(id):
+        cursor = mydb.getCursor()
+
+        sql = "SELECT * FROM musicas WHERE id = %s"
+        val = (id, )
+
+        cursor.execute(sql, val)
+
+        result = cursor.fetchone()
+
+        return result
+    
+    def getAll():
+        cursor = mydb.getCursor()
+
+        cursor.execute("SELECT * FROM musicas")
+        myresult = cursor.fetchall()
+
+        return myresult
+    
+    def update(musica):
+        cursor = mydb.getCursor()
+
+        musica.setUpdated_at(datetime.now())
+
+        sql = "UPDATE musicas SET nome = %s, duracao = %s, generos_id = %s, lancamento = %s, updated_at = %s WHERE id = %s"
+        val = (musica.getNome(), musica.getDuracao(), musica.getGeneros_id(), musica.getLancamento(), musica.updated_at, musica.getId())
+
+        cursor.execute(sql, val)
+        mydb.commit()
+
+        return musica
+    
+    def remove(id):
+        cursor = mydb.getCursor()
+
+        sql = "DELETE FROM musicas WHERE id = %s"
+        val = (id, )
+
+        cursor.execute(sql, val)
+        mydb.commit()
+
+        return True
