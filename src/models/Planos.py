@@ -5,8 +5,8 @@ mydb = Banco()
 
 class Planos():
     
-    def __init__(self, id, valor, descricao, limite):
-        self.id = id
+    def __init__(self, valor, descricao, limite):
+        self.id = None
         self.valor = valor
         self.descricao = descricao
         self.limite = limite
@@ -82,5 +82,26 @@ class Planos():
         myresult = cursor.fetchone()
 
         return myresult
+    
+    def update(newData):
+        cursor = mydb.getCursor()
+
+        sql = "UPDATE planos SET descricao = %s, valor = %s, limite = %s, updated_at = %s WHERE id = %s"
+        val = (newData.getDescricao(), newData.getValor(), newData.getLimite(), newData.updated_at, newData.getId())
+
+        cursor.execute(sql, val)
+        mydb.commit()
+
+        return newData
+    
+    def remove(id):
+        cursor = mydb.getCursor()
+
+        cursor.execute("DELETE FROM planos WHERE id = %s", (id,))
+
+        mydb.commit()
+
+        return True
+        
     
         

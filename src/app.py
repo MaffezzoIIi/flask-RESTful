@@ -16,9 +16,6 @@ app = create_app()
 def index():
     return 'Hello, World!'
 
-# CRUD planos
-
-
 @app.route('/api/planos', methods=['GET'])
 def get_planos():
     return 'api/planos'
@@ -38,7 +35,7 @@ def create_plano():
         return jsonify({'message': 'Descricao muito grande'}), 400
 
     if data is not None:
-        plano = Planos(data['id_plano'], data['nome_plano'],
+        plano = Planos(data['nome_plano'],
                        data['valor_plano'], data['descricao_plano'])
         plano.setCreated_at(datetime.now())
         plano.setUpdated_at(datetime.now())
@@ -53,12 +50,26 @@ def create_plano():
 
 @app.route('/api/planos/<int:plano_id>', methods=['PUT'])
 def update_plano(plano_id):
-    return 'api/planos'
+    plano = Planos().getOne(plano_id)
+
+    if plano is not None:
+        data = request.get_json()
+
+        plano.update(data)
+
+        return jsonify(plano.__dict__), 200
+
+
+    return jsonify({'message': 'Nenhum plano encontrato com este id'}), 400
 
 
 @app.route('/api/planos/<int:plano_id>', methods=['DELETE'])
 def delete_plano(plano_id):
-    return 'api/planos'
+    if(Planos().remove(plano_id)):
+        return jsonify({'message': 'Plano removido com sucesso'}), 200
+
+
+    return jsonify({'message': 'Nenhum plano encontrato com este id'}), 400
 
 # CRUD GENEROS
 
