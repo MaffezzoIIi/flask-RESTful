@@ -1,5 +1,5 @@
 import datetime
-from db.banco import Banco
+from src.db.banco import Banco
 
 mydb = Banco()
 
