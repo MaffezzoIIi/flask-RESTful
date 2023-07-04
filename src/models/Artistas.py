@@ -45,7 +45,7 @@ class Artistas():
     def save(gravadora):
         cursor = mydb.getCursor()
 
-        sql = "INSERT INTO gravadoras (nome, valor_contrato, vencimento_contrato, created_at, updated_at) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO gravadoras (nome, valor_contrato, vencimento_contrato, created, modified) VALUES (%s, %s, %s, %s, %s)"
         val = (gravadora.getNome(), gravadora.getValor_contrato(), gravadora.getVencimento_contrato(), gravadora.created_at, gravadora.created_at)
 
         gravadora.setId(cursor.lastrowid)

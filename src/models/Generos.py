@@ -38,7 +38,7 @@ class Generos():
     def save(genero):
         cursor = mydb.getCursor()
 
-        sql = "INSERT INTO generos (descricao, created_at, updated_at) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO generos (descricao, created, modified) VALUES (%s, %s, %s)"
         val = (genero.getDescricao(), genero.created_at, genero.created_at)
 
         genero.setId(cursor.lastrowid)

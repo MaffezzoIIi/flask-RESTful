@@ -5,13 +5,13 @@ mydb = Banco()
 
 class Gravadoras():
 
-    def __init__(self, id, nome, valor_contrato, vencimento_contrato, created_at, updated_at):
+    def __init__(self, id, nome, valor_contrato, vencimento_contrato):
         self.id = id
         self.nome = nome
         self.valor_contrato = valor_contrato
         self.vencimento_contrato = vencimento_contrato
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.created_at = None
+        self.updated_at = None
 
     def getId(self):
         return self.id
@@ -52,7 +52,7 @@ class Gravadoras():
     def save(gravadora):
         cursor = mydb.getCursor()
 
-        sql = "INSERT INTO gravadoras (nome, valor_contrato, vencimento_contrato, created_at, updated_at) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO gravadoras (nome, valor_contrato, vencimento_contrato, created, modified) VALUES (%s, %s, %s, %s, %s)"
         val = (gravadora.getNome(), gravadora.getValor_contrato(), gravadora.getVencimento_contrato(), gravadora.created_at, gravadora.created_at)
 
         gravadora.setId(cursor.lastrowid)
@@ -71,8 +71,11 @@ class Gravadoras():
         cursor.execute(sql, val)
 
         result = cursor.fetchone()
-
-        return result
+        
+        gravadora =  Gravadoras(result[0], result[1], result[2], result[3])
+        gravadora.setCreated_at(result[4])
+        gravadora.setUpdated_at(result[5])
+        return gravadora
     
     def getAll():
         cursor = mydb.getCursor()
@@ -82,18 +85,25 @@ class Gravadoras():
 
         return myresult
     
-    def update(gravadora):
+    def update(gravadora, id):
         cursor = mydb.getCursor()
 
-        gravadora.setUpdated_at(datetime.now())
-
-        sql = "UPDATE gravadoras SET nome = %s, valor_contrato = %s, vencimento_contrato = %s, updated_at = %s WHERE id = %s"
-        val = (gravadora.getNome(), gravadora.getValor_contrato(), gravadora.getVencimento_contrato(), gravadora.updated_at, gravadora.getId())
+        sql = "UPDATE gravadoras SET nome = %s, valor_contrato = %s, vencimento_contrato = %s, modified = %s WHERE id = %s"
+        val = (gravadora['nome'], gravadora['valor_contrato'], gravadora['vencimento_contrato'], datetime.datetime.now(), id)
 
         cursor.execute(sql, val)
         mydb.commit()
 
-        return gravadora
+        select_query = "SELECT * FROM gravadoras WHERE id = %s"
+        sql_val = (id,)
+        cursor.execute(select_query, sql_val)
+        result = cursor.fetchone()
+        
+        ngravadora =  Gravadoras(result[0], result[1], result[2], result[3])
+        ngravadora.setCreated_at(result[4])
+        ngravadora.setUpdated_at(result[5])
+        
+        return ngravadora
     
     def remove(id):
         cursor = mydb.getCursor()
