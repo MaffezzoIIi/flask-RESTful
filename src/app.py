@@ -85,11 +85,9 @@ def create_genero():
     data = request.get_json()
 
     if data is not None:
-        genero = Generos(data['descricao'])
-        genero.setCreated_at(datetime.now())
-        genero.setUpdated_at(datetime.now())
+        genero = Generos(None, data['descricao'])
 
-        genero.save()
+        Generos.save(genero)
 
         return jsonify(genero.__dict__), 200
     
@@ -254,7 +252,13 @@ def delete_cliente(cliente_id):
 # CRUD MUSICAS
 @app.route('/api/musicas', methods=['GET'])
 def get_musicas():
-    return 'cliente'
+    musicas = Musicas.getAll()
+    
+    if musicas is not None:
+        return jsonify(musicas), 200
+    
+    return jsonify({'message': 'Nenhum musica encontrado'}), 400
+
 
 
 @app.route('/api/musicas/<int:musica_id>', methods=['GET'])
@@ -272,7 +276,7 @@ def create_musica():
     data = request.get_json()
 
     if data is not None:
-        musica = Musicas(data['nome'], data['duracao'], data['generos_id'], data['lancamento'])
+        musica = Musicas(None, data['nome'], data['duracao'], data['generos_id'], data['lancamento'], None, None)
         musica.setCreated_at(datetime.now())
         musica.setUpdated_at(datetime.now())
 
@@ -284,14 +288,12 @@ def create_musica():
 
 @app.route('/api/musicas/<int:musica_id>', methods=['PUT'])
 def update_musica(musica_id):
-    musica = Musicas.getOne(musica_id)
+    data = request.get_json()
+    
+    if data is not None:
+        musica = Musicas.update(data, musica_id)
 
-    if musica is not None:
-        data = request.get_json()
-
-        musica.update(data)
-
-        return jsonify(musica.__dict__), 200
+        return jsonify(musica), 200
     
     return jsonify({'message': 'Nenhuma musica encontrada com este id'}), 400
 

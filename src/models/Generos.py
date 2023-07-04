@@ -5,11 +5,11 @@ mydb = Banco()
 
 class Generos():
 
-    def __init__(self, id, descricao, created_at, updated_at):
+    def __init__(self, id, descricao):
         self.id = id
         self.descricao = descricao
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.created_at = None
+        self.updated_at = None
 
     def getId(self):
         return self.id
@@ -39,9 +39,11 @@ class Generos():
         cursor = mydb.getCursor()
 
         sql = "INSERT INTO generos (descricao, created, modified) VALUES (%s, %s, %s)"
-        val = (genero.getDescricao(), genero.created_at, genero.created_at)
+        val = (genero.getDescricao(), datetime.datetime.now(), datetime.datetime.now())
 
         genero.setId(cursor.lastrowid)
+        genero.setCreated_at(datetime.datetime.now())
+        genero.setUpdated_at(datetime.datetime.now())
 
         cursor.execute(sql, val)
         mydb.commit()
@@ -61,7 +63,9 @@ class Generos():
         if result is None:
             return None
 
-        genero = Generos(result[0], result[1], result[2], result[3])
+        genero = Generos(result[0], result[1])
+        genero.setCreated_at( result[2])
+        genero.setUpdated_at(result[3])
 
         return genero
     
@@ -73,14 +77,8 @@ class Generos():
         cursor.execute(sql)
 
         result = cursor.fetchall()
-
-        generos = []
-
-        for row in result:
-            genero = Generos(row[0], row[1], row[2], row[3])
-            generos.append(genero)
-
-        return generos
+        
+        return result
     
     def update(genero):
         cursor = mydb.getCursor()
