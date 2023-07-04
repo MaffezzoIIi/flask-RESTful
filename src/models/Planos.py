@@ -1,11 +1,12 @@
 from src.db.banco import Banco
+from datetime import datetime
 
 mydb = Banco()
 
 class Planos():
     
-    def __init__(self, valor, descricao, limite):
-        self.id = None
+    def __init__(self, id, valor, descricao, limite):
+        self.id = id
         self.valor = valor
         self.descricao = descricao
         self.limite = limite
@@ -51,8 +52,7 @@ class Planos():
     def save(plano):
         cursor = mydb.getCursor()
 
-
-        sql = "INSERT INTO customers (descricao, valor, limte, created_at, updated_at) VALUES (%s, %s, %s, %s, %s)"
+        sql = "INSERT INTO planos (descricao, valor, limite, created, modified) VALUES (%s, %s, %s, %s, %s)"
         val = (plano.getDescricao(), plano.getValor(), plano.getLimite(), plano.created_at, plano.created_at)
 
         plano.setId(cursor.lastrowid)
@@ -68,9 +68,6 @@ class Planos():
         cursor.execute("SELECT * FROM planos")
         myresult = cursor.fetchall()
 
-        for x in myresult:
-            print(x)
-
         return myresult
 
     def getOne(id):
@@ -80,18 +77,21 @@ class Planos():
 
         myresult = cursor.fetchone()
 
-        return myresult
+        plano =  Planos(myresult[0], myresult[1], myresult[2], myresult[3])
+        plano.setCreated_at(myresult[4])
+        plano.setUpdated_at(myresult[5])
+        return plano
     
-    def update(newData):
+    def update(newData, id):
         cursor = mydb.getCursor()
 
-        sql = "UPDATE planos SET descricao = %s, valor = %s, limite = %s, updated_at = %s WHERE id = %s"
-        val = (newData.getDescricao(), newData.getValor(), newData.getLimite(), newData.updated_at, newData.getId())
+        sql = "UPDATE planos SET descricao = %s, valor = %s, limite = %s, modified = %s WHERE id = %s"
+        val = (newData['descricao'], newData['valor_plano'], newData['limite'], datetime.now(), id)
 
         cursor.execute(sql, val)
         mydb.commit()
-
-        return newData
+        
+        return Planos.getOne(id)
     
     def remove(id):
         cursor = mydb.getCursor()

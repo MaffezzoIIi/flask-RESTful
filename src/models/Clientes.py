@@ -59,7 +59,7 @@ class Clientes():
     def save(cliente):
         cursor = mydb.getCursor()
 
-        sql = "INSERT INTO clientes (login, senha, email, planos_id, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO clientes (login, senha, email, planos_id, created, modified) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (cliente.getLogin(), cliente.getSenha(), cliente.getEmail(), cliente.getPlanos_id(), cliente.created_at, cliente.created_at)
 
         cliente.setId(cursor.lastrowid)

@@ -22,7 +22,12 @@ def index():
 
 @app.route('/api/planos', methods=['GET'])
 def get_planos():
-    return 'api/planos'
+    planos = Planos.getAll()
+    
+    if planos is not None:
+        return jsonify(planos), 200
+    
+    return  jsonify({'message': 'Nenhum genero encontrado'}), 400
 
 
 @app.route('/api/planos/<int:plano_id>', methods=['GET'])
@@ -40,7 +45,7 @@ def create_plano():
         return jsonify({'message': 'Descricao muito grande'}), 400
 
     if data is not None:
-        plano = Planos(data['nome_plano'],
+        plano = Planos(None, data['nome_plano'],
                        data['valor_plano'], data['descricao'])
         plano.setCreated_at(datetime.now())
         plano.setUpdated_at(datetime.now())
@@ -55,14 +60,12 @@ def create_plano():
 
 @app.route('/api/planos/<int:plano_id>', methods=['PUT'])
 def update_plano(plano_id):
-    plano = Planos().getOne(plano_id)
+    data = request.get_json()
+    
+    if data is not None:
+        planos = Planos.update(data, plano_id)
 
-    if plano is not None:
-        data = request.get_json()
-
-        plano.update(data)
-
-        return jsonify(plano.__dict__), 200
+        return jsonify(planos.__dict__), 200
 
 
     return jsonify({'message': 'Nenhum plano encontrato com este id'}), 400
@@ -70,7 +73,7 @@ def update_plano(plano_id):
 
 @app.route('/api/planos/<int:plano_id>', methods=['DELETE'])
 def delete_plano(plano_id):
-    if(Planos().remove(plano_id)):
+    if(Planos.remove(plano_id)):
         return jsonify({'message': 'Plano removido com sucesso'}), 200
 
 
@@ -140,7 +143,8 @@ def create_gravadora():
     data = request.get_json()
 
     if data is not None:
-        gravadora = Gravadoras(data['nome'], data['valor_contrato'], data['vencimento_contrato'])
+        data_datetime = datetime.strptime(data['vencimento_contrato'], "%d/%m/%Y")
+        gravadora = Gravadoras(None, data['nome'], data['valor_contrato'], data_datetime.date())
         gravadora.setCreated_at(datetime.now())
         gravadora.setUpdated_at(datetime.now())
 
@@ -173,12 +177,10 @@ def get_gravadoras():
 
 @app.route('/api/gravadoras/<int:gravadora_id>', methods=['PUT'])
 def update_gravadora(gravadora_id):
-    gravadora = Gravadoras.getOne(gravadora_id)
-
-    if gravadora is not None:
-        data = request.get_json()
-
-        gravadora.update(data)
+    data = request.get_json()
+    
+    if data is not None:    
+        gravadora = Gravadoras.update   (data, gravadora_id)
 
         return jsonify(gravadora.__dict__), 200
     

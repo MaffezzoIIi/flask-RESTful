@@ -60,7 +60,7 @@ class Musicas():
     def save(musica):
         cursor = mydb.getCursor()
 
-        sql = "INSERT INTO musicas (nome, duracao, generos_id, lancamento, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO musicas (nome, duracao, generos_id, lancamento, created, modified) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (musica.getNome(), musica.getDuracao(), musica.getGeneros_id(), musica.getLancamento(), musica.created_at, musica.created_at)
 
         musica.setId(cursor.lastrowid)

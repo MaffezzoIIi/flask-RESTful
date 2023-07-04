@@ -4,10 +4,10 @@ class Banco():
     def __init__(self):
         self.mydb = mysql.connector.connect(
             host="localhost",
-            user="administrator",
+            database="mydb",
+            user="milene",
             password="senha"
         )
-        self.mydb = {}
 
     def getConexao(self):
         return self.mydb
