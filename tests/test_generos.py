@@ -7,17 +7,15 @@ def test_unit_generos(mocker):
     # Cria um objeto Genero de exemplo
     exemplo_genero = Generos(
         id=1,
-        descricao='Genero de teste',
-        created_at=int(datetime.now().timestamp()),
-        updated_at=int(datetime.now().timestamp())
+        descricao='Genero de teste'
     )
 
-    mock_get = mocker.patch.object(Generos.getId(exemplo_genero.id), 'get')
+    # mock_get = mocker.patch.object(Generos.getId(exemplo_genero.id), 'getId')
+    mock_get = mocker.patch.object(Generos, 'getId')
+    
     mock_get.return_value = exemplo_genero
-    
-    genero = Generos()
-    
-    genero_obtido = genero.get_generos(1)
+
+    genero_obtido = exemplo_genero.getId(1)
     
     mock_get.assert_called_once_with(1)
 

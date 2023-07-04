@@ -10,25 +10,19 @@ def test_unit_artistas(mocker):
         id=1,
         nome='Gravadora de teste',
         valor_contrato=10,
-        vencimento_contrato=int(datetime.now().timestamp()),
-        created_at=int(datetime.now().timestamp()),
-        updated_at=int(datetime.now().timestamp())
+        vencimento_contrato=int(datetime.now().timestamp())
     )
 
     exemplo_artista = Artistas(
         id=1,
         nome= "Artista de teste", 
-        gravadoras_id = exemplo_gravadora.id,
-        created_at=int(datetime.now().timestamp()),
-        updated_at=int(datetime.now().timestamp())
+        gravadoras_id = exemplo_gravadora.id
     )
     
-    mock_get = mocker.patch.object(Artistas.getId(exemplo_artista.id), 'get')
+    mock_get = mocker.patch.object(Artistas, 'getId')
     mock_get.return_value = exemplo_artista
     
-    artista = Artistas()
-    
-    artista_obtido = artista.get_artistas(1)
+    artista_obtido = exemplo_artista.getId(1)
     
     mock_get.assert_called_once_with(1)
 

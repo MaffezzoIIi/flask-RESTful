@@ -5,11 +5,11 @@ mydb = Banco()
 
 class Generos():
 
-    def __init__(self, id, descricao, created_at, updated_at):
+    def __init__(self, id, descricao):
         self.id = id
         self.descricao = descricao
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.created_at = None
+        self.updated_at = None
 
     def getId(self):
         return self.id

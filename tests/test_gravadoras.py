@@ -1,4 +1,3 @@
-
 import pytest
 
 from datetime import datetime
@@ -10,17 +9,13 @@ def test_unit_gravadoras(mocker):
         id=1,
         nome='Gravadora de teste',
         valor_contrato=10,
-        vencimento_contrato=int(datetime.now().timestamp()),
-        created_at=int(datetime.now().timestamp()),
-        updated_at=int(datetime.now().timestamp())
+        vencimento_contrato=int(datetime.now().timestamp())
     )
     
-    mock_get = mocker.patch.object(Gravadoras.getId(exemplo_gravadora.id), 'get')
+    mock_get = mocker.patch.object(Gravadoras, 'getId')
     mock_get.return_value = exemplo_gravadora
     
-    gravadora = Gravadoras()
-    
-    gravadora_obtida = gravadora.get_gravadoras(1)
+    gravadora_obtida = exemplo_gravadora.getId(1)
     
     mock_get.assert_called_once_with(1)
 
