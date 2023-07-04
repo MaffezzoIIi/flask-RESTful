@@ -5,12 +5,12 @@ mydb = Banco()
 
 class Artistas():
 
-    def __init__(self, id, nome, gravadoras_id, created_at, updated_at):
+    def __init__(self, id, nome, gravadoras_id):
         self.id = id
         self.nome = nome
         self.gravadoras_id = gravadoras_id
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.created_at = None
+        self.updated_at = None
 
     def getId(self):
         return self.id

@@ -8,9 +8,7 @@ def test_unit_musicas(mocker):
     # Cria um objeto Genero de exemplo
     exemplo_genero = Generos(
         id=1,
-        descricao='Genero de teste',
-        created_at=int(datetime.now().timestamp()),
-        updated_at=int(datetime.now().timestamp())
+        descricao='Genero de teste'
     )
 
     # Cria um objeto Musica de exemplo
@@ -19,17 +17,13 @@ def test_unit_musicas(mocker):
         nome='Musica de teste',
         duracao=10,
         generos_id=exemplo_genero.id,
-        lancamento=int(datetime.now().timestamp()),
-        created_at=int(datetime.now().timestamp()),
-        updated_at=int(datetime.now().timestamp())
+        lancamento=int(datetime.now().timestamp())
     )
     
-    mock_get = mocker.patch.object(Musicas.getId(exemplo_musica.id), 'get')
+    mock_get = mocker.patch.object(Musicas, 'getId')
     mock_get.return_value = exemplo_musica
     
-    musica = Musicas()
-    
-    musica_obtida = musica.get_musicas(1)
+    musica_obtida = exemplo_musica.getId(1)
     
     mock_get.assert_called_once_with(1)
 

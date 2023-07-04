@@ -5,14 +5,14 @@ mydb = Banco()
 
 class Clientes():
 
-    def __init__(self, id, login, senha, email, planos_id, created_at, updated_at):
+    def __init__(self, id, login, senha, email, planos_id):
         self.id = id
         self.login = login
         self.senha = senha
         self.email = email
         self.planos_id = planos_id
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.created_at = None
+        self.updated_at = None
 
     def getId(self):
         return self.id
