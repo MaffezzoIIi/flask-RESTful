@@ -4,7 +4,6 @@ import pytest
 from datetime import datetime
 from src.models.Gravadoras import Gravadoras
 
-#
 def test_unit_gravadoras(mocker):
     # Cria um objeto Gravadora de exemplo
     exemplo_gravadora = Gravadoras(
