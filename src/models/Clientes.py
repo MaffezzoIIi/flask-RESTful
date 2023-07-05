@@ -89,14 +89,14 @@ class Clientes():
 
         return myresult
     
-    def update(cliente):
+    def update(cliente, id):
 
         cursor = mydb.getCursor()
 
-        cliente.setUpdated_at(datetime.now())
+        sql = "UPDATE clientes SET login = %s, senha = %s, email = %s, planos_id = %s, modified = %s WHERE id = %s"
+        val = (cliente['login'], cliente['senha'], cliente['email'], cliente['planos_id'],  datetime.datetime.now(), id)
 
-        sql = "UPDATE clientes SET login = %s, senha = %s, email = %s, planos_id = %s, updated_at = %s WHERE id = %s"
-        val = (cliente.getLogin(), cliente.getSenha(), cliente.getEmail(), cliente.getPlanos_id(), cliente.updated_at, cliente.getId())
+        cliente['updated_at'] = datetime.datetime.now()
 
         cursor.execute(sql, val)
         mydb.commit()

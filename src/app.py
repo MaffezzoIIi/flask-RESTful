@@ -198,7 +198,7 @@ def create_cliente():
     data = request.get_json()
 
     if data is not None:
-        cliente = Clientes(data['login'], data['senha'], data['email'], data['planos_id'])
+        cliente = Clientes(None, data['login'], data['senha'], data['email'], data['planos_id'], None, None)
         cliente.setCreated_at(datetime.now())
         cliente.setUpdated_at(datetime.now())
 
@@ -236,9 +236,10 @@ def update_cliente(cliente_id):
     if cliente is not None:
         data = request.get_json()
 
-        cliente.update(data)
+        newCliente = cliente.update(data, cliente_id)
 
-        return jsonify(cliente.__dict__), 200
+        return jsonify(newCliente), 200
+    
     return jsonify({'message': 'Nenhum cliente encontrado com este id'}), 400
 
 
@@ -318,7 +319,12 @@ def get_artistas():
 
 @app.route('/api/artistas/<int:artista_id>', methods=['GET'])
 def get_artista(artista_id):
-    return 'cliente'
+    artista  = Artistas.getOne(artista_id)
+    
+    if artista is not None:
+        return jsonify(artista), 200
+    
+    return '', 400 
 
 
 @app.route('/api/artistas', methods=['POST'])

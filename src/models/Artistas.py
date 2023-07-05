@@ -89,5 +89,15 @@ class Artistas():
         result = cursor.fetchall()
         
         return result
+    
+    def getOne(id):
+        cursor = mydb.getCursor()
 
+        sql = "SELECT * FROM artistas WHERE id = %s"
+        val = (id, )
+
+        cursor.execute(sql, val)
+
+        result = cursor.fetchone()
+        return result
 
