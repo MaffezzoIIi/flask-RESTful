@@ -308,8 +308,12 @@ def delete_musica(musica_id):
 # CRUD artistas
 @app.route('/api/artistas', methods=['GET'])
 def get_artistas():
-
-    return 'cliente'
+    artistas = Artistas.getAll()
+    
+    if artistas is not None:
+        return jsonify(artistas), 200
+    
+    return '', 400
 
 
 @app.route('/api/artistas/<int:artista_id>', methods=['GET'])
@@ -322,7 +326,7 @@ def create_artista():
     data = request.get_json()
 
     if data is not None:
-        artista = Artistas(data['nome'], data['gravadoras_id'])
+        artista = Artistas(None, data['nome'], data['gravadoras_id'], None, None)
         artista.setCreated_at(datetime.now())
         artista.setUpdated_at(datetime.now())
 
@@ -334,15 +338,13 @@ def create_artista():
 
 
 @app.route('/api/artistas/<int:artista_id>', methods=['PUT'])
-def update_artista(artista_id):
-    artista = Artistas.getOne(artista_id)
+def update_artista(artista_id): 
+    data = request.get_json()
+    
+    if data is not None:
+        artistas = Artistas.update(data, artista_id)
 
-    if artista is not None:
-        data = request.get_json()
-
-        artista.update(data)
-
-        return jsonify(artista.__dict__), 200
+        return jsonify(artistas), 200
     
     return jsonify({'message': 'Nenhum artista encontrado com este id'}), 400
 
