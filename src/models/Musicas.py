@@ -79,24 +79,26 @@ class Musicas():
         cursor.execute(sql, val)
 
         result = cursor.fetchone()
-
         return result
     
     def getAll():
         cursor = mydb.getCursor()
 
-        cursor.execute("SELECT * FROM musicas")
-        myresult = cursor.fetchall()
+        sql = "SELECT * FROM musicas"
 
-        return myresult
+        cursor.execute(sql)
+
+        result = cursor.fetchall()
+
+        return result
     
-    def update(musica):
+    def update(musica, id):
         cursor = mydb.getCursor()
 
-        musica.setUpdated_at(datetime.now())
+        sql = "UPDATE musicas SET nome = %s, duracao = %s, generos_id = %s, lancamento = %s, modified = %s WHERE id = %s"
+        val = (musica['nome'], musica['duracao'], musica['generos_id'], musica['lancamento'], datetime.datetime.now(), id)
 
-        sql = "UPDATE musicas SET nome = %s, duracao = %s, generos_id = %s, lancamento = %s, updated_at = %s WHERE id = %s"
-        val = (musica.getNome(), musica.getDuracao(), musica.getGeneros_id(), musica.getLancamento(), musica.updated_at, musica.getId())
+        musica['updated_at'] = datetime.datetime.now()
 
         cursor.execute(sql, val)
         mydb.commit()

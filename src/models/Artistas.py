@@ -42,27 +42,25 @@ class Artistas():
     def setUpdated_at(self, updated_at):
         self.updated_at = updated_at
 
-    def save(gravadora):
+    def save(artistas):
         cursor = mydb.getCursor()
 
-        sql = "INSERT INTO gravadoras (nome, valor_contrato, vencimento_contrato, created, modified) VALUES (%s, %s, %s, %s, %s)"
-        val = (gravadora.getNome(), gravadora.getValor_contrato(), gravadora.getVencimento_contrato(), gravadora.created_at, gravadora.created_at)
+        sql = "INSERT INTO artistas (nome, gravadoras_id, created, modified) VALUES (%s, %s, %s, %s)"
+        val = (artistas.getNome(), artistas.getGravadoras_id(), artistas.getCreated_at(), artistas.getCreated_at())
 
-        gravadora.setId(cursor.lastrowid)
+        artistas.setId(cursor.lastrowid)
 
         cursor.execute(sql, val)
         mydb.commit()
 
-        return gravadora
+        return artistas
     
 
-    def update(artistas):
+    def update(artistas, id):
         cursor = mydb.getCursor()
 
-        artistas.setUpdated_at(datetime.now())
-
-        sql = "UPDATE artistas SET nome = %s, gravadoras_id = %s, updated_at = %s WHERE id = %s"
-        val = (artistas.getNome(), artistas.getGravadoras_id(), datetime.now(), artistas.getId())
+        sql = "UPDATE artistas SET nome = %s, gravadoras_id = %s, modified = %s WHERE id = %s"
+        val = (artistas['nome'], artistas['gravadoras_id'], datetime.datetime.now(), id)
 
         cursor.execute(sql, val)
         mydb.commit()
@@ -80,5 +78,26 @@ class Artistas():
         mydb.commit()
 
         return True
+    
+    def getAll():
+        cursor = mydb.getCursor()
+        
+        sql = "SELECT * FROM artistas"
 
+        cursor.execute(sql)
+
+        result = cursor.fetchall()
+        
+        return result
+    
+    def getOne(id):
+        cursor = mydb.getCursor()
+
+        sql = "SELECT * FROM artistas WHERE id = %s"
+        val = (id, )
+
+        cursor.execute(sql, val)
+
+        result = cursor.fetchone()
+        return result
 

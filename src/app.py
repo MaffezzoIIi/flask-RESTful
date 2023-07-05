@@ -85,11 +85,9 @@ def create_genero():
     data = request.get_json()
 
     if data is not None:
-        genero = Generos(data['descricao'])
-        genero.setCreated_at(datetime.now())
-        genero.setUpdated_at(datetime.now())
+        genero = Generos(None, data['descricao'])
 
-        genero.save()
+        Generos.save(genero)
 
         return jsonify(genero.__dict__), 200
     
@@ -200,7 +198,7 @@ def create_cliente():
     data = request.get_json()
 
     if data is not None:
-        cliente = Clientes(data['login'], data['senha'], data['email'], data['planos_id'])
+        cliente = Clientes(None, data['login'], data['senha'], data['email'], data['planos_id'], None, None)
         cliente.setCreated_at(datetime.now())
         cliente.setUpdated_at(datetime.now())
 
@@ -238,9 +236,10 @@ def update_cliente(cliente_id):
     if cliente is not None:
         data = request.get_json()
 
-        cliente.update(data)
+        newCliente = cliente.update(data, cliente_id)
 
-        return jsonify(cliente.__dict__), 200
+        return jsonify(newCliente), 200
+    
     return jsonify({'message': 'Nenhum cliente encontrado com este id'}), 400
 
 
@@ -254,7 +253,13 @@ def delete_cliente(cliente_id):
 # CRUD MUSICAS
 @app.route('/api/musicas', methods=['GET'])
 def get_musicas():
-    return 'cliente'
+    musicas = Musicas.getAll()
+    
+    if musicas is not None:
+        return jsonify(musicas), 200
+    
+    return jsonify({'message': 'Nenhum musica encontrado'}), 400
+
 
 
 @app.route('/api/musicas/<int:musica_id>', methods=['GET'])
@@ -272,7 +277,7 @@ def create_musica():
     data = request.get_json()
 
     if data is not None:
-        musica = Musicas(data['nome'], data['duracao'], data['generos_id'], data['lancamento'])
+        musica = Musicas(None, data['nome'], data['duracao'], data['generos_id'], data['lancamento'], None, None)
         musica.setCreated_at(datetime.now())
         musica.setUpdated_at(datetime.now())
 
@@ -284,14 +289,12 @@ def create_musica():
 
 @app.route('/api/musicas/<int:musica_id>', methods=['PUT'])
 def update_musica(musica_id):
-    musica = Musicas.getOne(musica_id)
+    data = request.get_json()
+    
+    if data is not None:
+        musica = Musicas.update(data, musica_id)
 
-    if musica is not None:
-        data = request.get_json()
-
-        musica.update(data)
-
-        return jsonify(musica.__dict__), 200
+        return jsonify(musica), 200
     
     return jsonify({'message': 'Nenhuma musica encontrada com este id'}), 400
 
@@ -306,13 +309,22 @@ def delete_musica(musica_id):
 # CRUD artistas
 @app.route('/api/artistas', methods=['GET'])
 def get_artistas():
-
-    return 'cliente'
+    artistas = Artistas.getAll()
+    
+    if artistas is not None:
+        return jsonify(artistas), 200
+    
+    return '', 400
 
 
 @app.route('/api/artistas/<int:artista_id>', methods=['GET'])
 def get_artista(artista_id):
-    return 'cliente'
+    artista  = Artistas.getOne(artista_id)
+    
+    if artista is not None:
+        return jsonify(artista), 200
+    
+    return '', 400 
 
 
 @app.route('/api/artistas', methods=['POST'])
@@ -320,7 +332,7 @@ def create_artista():
     data = request.get_json()
 
     if data is not None:
-        artista = Artistas(data['nome'], data['gravadoras_id'])
+        artista = Artistas(None, data['nome'], data['gravadoras_id'], None, None)
         artista.setCreated_at(datetime.now())
         artista.setUpdated_at(datetime.now())
 
@@ -332,15 +344,13 @@ def create_artista():
 
 
 @app.route('/api/artistas/<int:artista_id>', methods=['PUT'])
-def update_artista(artista_id):
-    artista = Artistas.getOne(artista_id)
+def update_artista(artista_id): 
+    data = request.get_json()
+    
+    if data is not None:
+        artistas = Artistas.update(data, artista_id)
 
-    if artista is not None:
-        data = request.get_json()
-
-        artista.update(data)
-
-        return jsonify(artista.__dict__), 200
+        return jsonify(artistas), 200
     
     return jsonify({'message': 'Nenhum artista encontrado com este id'}), 400
 
